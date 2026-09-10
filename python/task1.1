@@ -1,0 +1,49 @@
+import math
+#значение функции 1 варианта
+def f(x):
+    return (math.e)**(x-1)-x**3-x
+#проверка на монотонность
+def monotone(L, R, eps):
+    flag_up = True
+    flag_down = True
+    x = L
+    #текущее значение функции
+    now = f(x)
+    # две проверки на возрастающую и убывающую монотонность
+    while x < R:
+        x += eps
+        if x > R:
+            x = R
+        #следующее значение фукции
+        new = f(x)
+        if new <= now:
+            flag_up = False
+            break
+        if new >= now:
+            flag_down = False
+            break
+        now = new
+    return flag_up or flag_down
+#основная функция 
+def method_hord(L, R, eps):
+    shag=0
+    #проверка на монотонность
+    if monotone(L, R, eps)==0:
+        print("функция не монотонна")
+        return 0
+    else:
+        while True:
+            shag+=1
+            #приближенное значеник корня
+            x =L-f(L)*(R-L)/(f(R)-f(L))
+            if abs(f(x)) < eps:
+                return x
+            else:
+                if f(x)*f(R)>0:
+                    R = x
+                else:
+                    L = x
+            print(shag, x)
+        return x
+L, R, eps = map(float, input("Введите левую, правую границу и погрешность:  ").split())
+print(method_hord(L, R, eps))
